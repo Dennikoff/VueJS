@@ -1,10 +1,19 @@
 <template>
   <div class="app">
     <h1>Страница с постами</h1>
-    <my-button
-        @click="() => {this.modalVisible = true}">Создать пост
-    </my-button>
-    <my-modal v-model:show="modalVisible" @visibility="changeVisibility">
+    <div class="appButtons">
+      <my-button
+          @click="() => {this.modalVisible = true}">Создать пост
+      </my-button>
+      <my-select
+        v-model="selectedSort"
+        :options="sortOptions"
+      />
+    </div>
+    <my-modal
+        v-model:show="modalVisible"
+        @visibility="changeVisibility"
+    >
       <post-form
           @create="createPost"
       />
@@ -24,9 +33,11 @@ import PostList from "@/components/PostList.vue";
 import MyModal from "@/components/UI/MyModal.vue";
 import MyButton from "@/components/UI/MyButton.vue";
 import axios from "axios";
+import MySelect from "@/components/UI/MySelect.vue";
 
 export default {
   components: {
+    MySelect,
     MyButton,
     MyModal,
     PostForm,
@@ -37,6 +48,11 @@ export default {
       posts: [],
       modalVisible: false,
       isPostsLoading: false,
+      selectedSort: '',
+      sortOptions: [
+        {value: 'title', name: 'По названию'},
+        {value: 'name', name: 'По описанию'},
+      ]
     }
   },
   methods: {
@@ -86,5 +102,8 @@ export default {
   margin: 10px 15px
 }
 
-
+.appButtons{
+  display: flex;
+  justify-content: space-between;
+}
 </style>
