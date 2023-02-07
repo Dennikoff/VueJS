@@ -2,16 +2,19 @@
   <div class="app">
     <h1>Страница с постами</h1>
     <my-button
-        @click="() => {this.modalVisible = true}">Создать пост</my-button>
+        @click="() => {this.modalVisible = true}">Создать пост
+    </my-button>
     <my-modal v-model:show="modalVisible" @visibility="changeVisibility">
       <post-form
-        @create="createPost"
+          @create="createPost"
       />
     </my-modal>
     <post-list
         :posts="posts"
         @remove="remove"
+        v-if="!isPostsLoading"
     />
+    <div v-else>ЗАГРУЗКА</div>
   </div>
 </template>
 
@@ -20,6 +23,7 @@ import PostForm from "@/components/PostForm.vue";
 import PostList from "@/components/PostList.vue";
 import MyModal from "@/components/UI/MyModal.vue";
 import MyButton from "@/components/UI/MyButton.vue";
+import axios from "axios";
 
 export default {
   components: {
@@ -30,13 +34,9 @@ export default {
   },
   data() {
     return {
-      posts: [
-        {id: 1, title: "Пост о JavaScript", body: "JavaScript топ"},
-        {id: 2, title: "Пост о kEK", body: "kek топ"},
-        {id: 3, title: "Пост о LOL", body: "lol топ"},
-        {id: 4, title: "Пост о Orbidol", body: "Orbidol топ"},
-      ],
-      modalVisible: false
+      posts: [],
+      modalVisible: false,
+      isPostsLoading: false,
     }
   },
   methods: {
@@ -50,7 +50,27 @@ export default {
     },
     changeVisibility(flag) {
       this.modalVisible = flag
+    },
+    async fetchPosts() {
+      let url = 'https://jsonplaceholder.typicode.com/posts?_limit=20'
+      try {
+        this.isPostsLoading = true
+        setTimeout(async () => {
+              let response = await axios.get(url)
+              this.posts = response.data
+              this.isPostsLoading = false
+            }, 1000
+        )
+      } catch (e) {
+        console.log('here')
+        console.log(e)
+      } finally {
+
+      }
     }
+  },
+  mounted() {
+    this.fetchPosts()
   }
 }
 </script>

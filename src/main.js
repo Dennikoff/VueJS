@@ -8,6 +8,4 @@ components.forEach(component => {
     app.component(component.name, component)
 })
 
-console.log(components)
-
 app.mount('#app')
