@@ -51,7 +51,7 @@ export default {
       selectedSort: '',
       sortOptions: [
         {value: 'title', name: 'По названию'},
-        {value: 'name', name: 'По описанию'},
+        {value: 'body', name: 'По описанию'},
       ]
     }
   },
@@ -87,7 +87,18 @@ export default {
   },
   mounted() {
     this.fetchPosts()
+  },
+  watch: {
+    selectedSort(newValue) {
+      console.log(newValue)
+      console.log(this.selectedSort)
+      console.log(this.posts)
+      this.posts.sort((a, b) => {
+        return a[newValue]?.localeCompare(b[newValue])
+      })
+    }
   }
+
 }
 </script>
 
